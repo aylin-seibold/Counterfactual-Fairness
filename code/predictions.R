@@ -43,16 +43,25 @@ lawTest$LSAT <- round(lawTest$LSAT)
 law_stan_train <- list(N = n, K = length(sense_cols), a = data.matrix(lawTrain[,sense_cols]), 
                        ugpa = lawTrain[,c("UGPA")], lsat = lawTrain[,c("LSAT")], zfya = lawTrain[,c("ZFYA")])
 
-
-fit_law_train <- stan(file = "data/law_school_train.stan", data = law_stan_train, iter = 2000, chains = 1, verbose = TRUE)
+if(file.exists("law_school_l_stan_train.rds")) {
+  la_law_train <- readRDS("law_school_l_stan_train.rds")
+} else {
+  fit_law_train <- stan(file = "code/law_school_train.stan", 
+                        data = law_stan_train, iter = 2000, 
+                        chains = 1, verbose = TRUE)
+  la_law_train <- extract(fit_law_train, permuted = TRUE)
+  #u_te_samp <- colMeans(la_law_train$u_TE)
+  saveRDS(la_law_train, file = "law_school_l_stan_train.rds")
+}
+U_TRAIN   <- colMeans(la_law_train$u)
 # Extract information
 
-la_law_train <- extract(fit_law_train, permuted = TRUE)
+#la_law_train <- extract(fit_law_train, permuted = TRUE)
 #u_te_samp <- colMeans(la_law_train$u_TE)
-U_TRAIN   <- colMeans(la_law_train$u)
+#U_TRAIN   <- colMeans(la_law_train$u)
 
-save(la_law_train,file='law_school_l_stan_train.Rdata')
-saveRDS(fit_law_train, file = "cached")
+#save(la_law_train,file='law_school_l_stan_train.Rdata')
+#saveRDS(fit_law_train, file = "cached")
 
 ugpa0      <- mean(la_law_train$ugpa0)
 eta_u_ugpa <- mean(la_law_train$eta_u_ugpa)
@@ -70,20 +79,27 @@ law_stan_test <- list(N = ne, K = length(sense_cols), a = data.matrix(lawTest[,s
                       lsat0 = lsat0, eta_u_lsat = eta_u_lsat, eta_a_lsat = eta_a_lsat,
                       sigma_g = SIGMA_G)
 
+if(file.exists("law_school_l_stan_test.rds")) {
+  la_law_test <- readRDS("law_school_l_stan_test.rds")
+} else {
+  fit_law_test <- stan(file = "code/law_school_only_u.stan", 
+                        data = law_stan_test, iter = 2000, 
+                        chains = 1, verbose = TRUE)
+  la_law_test <- extract(fit_law_test, permuted = TRUE)
+  #u_te_samp <- colMeans(la_law_train$u_TE)
 
-fit_law_test <- stan(file = "data/law_school_only_u.stan", data = law_stan_test, iter = 2000, chains = 1, verbose = TRUE)
-la_law_test <- extract(fit_law_test, permuted = TRUE)
-#u_te_samp <- colMeans(la_law_train$u_TE)
+  saveRDS(la_law_test, file = "law_school_l_stan_test.rds")
+  
+}
+
 U_TEST   <- colMeans(la_law_test$u)
 
+#la_law_test <- extract(fit_law_test, permuted = TRUE)
+#u_te_samp <- colMeans(la_law_train$u_TE)
+#U_TEST   <- colMeans(la_law_test$u)
 
-save(la_law_test,file='law_school_l_stan_test.Rdata')
 
-git filter-branch --tree-filter 'rm -f data/intermediate/law_school_l_stand_train.rds' HEAD
-git filter-branch --tree-filter 'rm -f data/intermediate/law_school_l_stand_test.rds' HEAD
-git filter-branch --tree-filter 'rm -f data/intermediate/fit_law_test.rds' HEAD
-git filter-branch --tree-filter ' rm -f data/intermediate/fit_law_train.rds' HEAD
-
+#save(la_law_test,file='law_school_l_stan_test.Rdata')
 
 # Classifiers on data
 # -------------------
