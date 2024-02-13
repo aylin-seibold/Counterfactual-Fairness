@@ -56,13 +56,6 @@ if(file.exists("law_school_l_stan_train.rds")) {
 U_TRAIN   <- colMeans(la_law_train$u)
 # Extract information
 
-#la_law_train <- extract(fit_law_train, permuted = TRUE)
-#u_te_samp <- colMeans(la_law_train$u_TE)
-#U_TRAIN   <- colMeans(la_law_train$u)
-
-#save(la_law_train,file='law_school_l_stan_train.Rdata')
-#saveRDS(fit_law_train, file = "cached")
-
 ugpa0      <- mean(la_law_train$ugpa0)
 eta_u_ugpa <- mean(la_law_train$eta_u_ugpa)
 eta_a_ugpa <- colMeans(la_law_train$eta_a_ugpa)
@@ -72,7 +65,7 @@ eta_u_lsat <- mean(la_law_train$eta_u_lsat)
 eta_a_lsat <- colMeans(la_law_train$eta_a_lsat)
 
 SIGMA_G <- mean(la_law_train$sigma_g)
-#---------------------------------- test datensatz mit gleichen paramentern
+#---------------------------------- 
 law_stan_test <- list(N = ne, K = length(sense_cols), a = data.matrix(lawTest[,sense_cols]),
                       ugpa = lawTest[,c("UGPA")], lsat = lawTest[,c("LSAT")],
                       ugpa0 = ugpa0, eta_u_ugpa = eta_u_ugpa, eta_a_ugpa = eta_a_ugpa,
@@ -86,20 +79,11 @@ if(file.exists("law_school_l_stan_test.rds")) {
                         data = law_stan_test, iter = 2000, 
                         chains = 1, verbose = TRUE)
   la_law_test <- extract(fit_law_test, permuted = TRUE)
-  #u_te_samp <- colMeans(la_law_train$u_TE)
-
   saveRDS(la_law_test, file = "law_school_l_stan_test.rds")
   
 }
 
 U_TEST   <- colMeans(la_law_test$u)
-
-#la_law_test <- extract(fit_law_test, permuted = TRUE)
-#u_te_samp <- colMeans(la_law_train$u_TE)
-#U_TEST   <- colMeans(la_law_test$u)
-
-
-#save(la_law_test,file='law_school_l_stan_test.Rdata')
 
 # Classifiers on data
 # -------------------
