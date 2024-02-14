@@ -3,6 +3,10 @@ library(patchwork)
 library(dplyr)
 library(cowplot)
 
+RMSE <- c(rmse_u_te, rmse_un_te, rmse_f_te, rmse_det_te)
+Model <- c("Full", "Unaware", "Fair K", "Fair Add")
+RMSE.Table <- data.frame(Model,RMSE)
+
 data.te <- X_U_TE
 data.fun <- function(model, data) {
   if (model == "Full") {
@@ -30,31 +34,48 @@ data.Add <- data.fun("FairAdd", data.te)
 
 # Boxplots Gender
 gender.plot.fun <- function(data) {
-  ggplot(data, aes(x = predictions, y = as.factor(female), fill = as.factor(female))) +
+  ggplot(data, aes(x = predictions, fill = as.factor(female))) +
     geom_boxplot() +
     theme_bw() + 
-    coord_flip() +
-    guides(fill = "none") + 
+    guides(fill = guide_legend(title = "Gender")) + 
     xlim(-1.25,0.75) +
-    labs(title = NULL, ylab = "prediciton", xlab = "gender") +
+    labs(title = NULL, ylab = NULL, xlab = NULL) +
     theme(axis.title.x = element_blank(),
-          axis.title.y = element_blank()) +
-    scale_y_discrete(labels = c("male", "female"))
-    
+          axis.title.y = element_blank(),
+          axis.text.y = element_blank(),
+          axis.text = element_text(size = 10),
+          legend.text = element_text(size = 10),
+          legend.title = element_text(size = 11, face = "bold"),
+          title = element_text(size = 12, face = "bold")) +
+    scale_fill_manual(name = "Gender",
+                      values = c( "1" = "#D55E00", "0" = "#0072B2"),
+                      labels = c("1" = "female", "0" = "male"),
+                      breaks = c("1", "0"))
 }
 
 # Boxplots Race
 race.plot.fun <- function(data) { 
-  ggplot(data, aes(x = predictions, y = as.factor(combined_column), fill = as.factor(combined_column))) +
+  ggplot(data, aes(x = predictions, fill = as.factor(combined_column))) +
     geom_boxplot() +
     theme_bw() + 
-    coord_flip() +
-    xlim(-1.25,0.75) +
-    guides(fill = "none") + 
-  labs(title = NULL, ylab = "prediciton", xlab = "race") +
+    xlim(-1.25, 0.75) +
+    guides(fill = guide_legend(title = "Race")) +
+  labs(title = NULL, ylab = NULL, xlab = NULL) +
     theme(axis.title.x = element_blank(),
-          axis.title.y = element_blank()) +
-    scale_y_discrete(labels = c("other", "mexican", "asian", "white", "black"))
+          axis.title.y = element_blank(),
+          axis.text.y = element_blank(),
+          axis.text = element_text(size = 10),
+          legend.text = element_text(size = 10),
+          legend.title = element_text(size = 11, face = "bold"),
+          title = element_text(size = 12, face = "bold")) + 
+    scale_fill_manual(name = "Race",
+                      values = c("0100" = "#D55E00", "00asian0" = "#0072B2",
+                                  "black000" = "#009E73", "0000" = "#999999", 
+                                  "000mexican" =  "#CC79A7"),
+                      labels = c("0100" = "white", "00asian0" = "asian",
+                                 "black000" = "black", "0000" = "other", 
+                                 "000mexican" =  "mexican"),
+                      breaks = c("black000","0100", "00asian0", "000mexican", "0000"))
 }
 
 
@@ -64,25 +85,30 @@ data.K <- data.fun("FairK", data.te)
 data.Add <- data.fun("FairAdd", data.te)
 
 plot1 <- gender.plot.fun(data.full) + labs(title = "Full") 
-plot2 <- gender.plot.fun(data.unaware) + labs(title = "Unaware") 
+plot2 <- gender.plot.fun(data.unaware) + labs(title = "Unaware")
 plot3 <- gender.plot.fun(data.K) + labs(title = "Fair K")
-plot4 <- gender.plot.fun(data.Add) + labs(title = "Fair Add") 
+plot4 <- gender.plot.fun(data.Add) + labs(title = "Fair Add")
 
-plot5 <- race.plot.fun(data.full) + labs(title = "Full")
+plot5 <- race.plot.fun(data.full) + labs(title = "Full") 
 plot6 <- race.plot.fun(data.unaware) + labs(title = "Unaware")
-plot7 <- race.plot.fun(data.K) + labs(title = "Fair K")
-plot8 <- race.plot.fun(data.Add) + labs(title = "Fair Add")
+plot7 <- race.plot.fun(data.K) + labs(title = "Fair K") 
+plot8 <- race.plot.fun(data.Add) + labs(title = "Fair Add") 
 
 combined.plot.gender <- plot1 + plot2 + plot3 + plot4 +
-  plot_layout(ncol = 2) 
+  plot_layout(ncol = 2, guides = "collect")
+
 combined.plot.gender <- patchwork::patchworkGrob(combined.plot.gender)
-gridExtra::grid.arrange(combined.plot.gender, left = "Predictions", bottom = "Gender")
+gridExtra::grid.arrange(combined.plot.gender,
+                        bottom = textGrob(expression(widehat(ZFYA)),
+                                          gp = gpar(fontsize = 12, fontweight = "bold")))
+
 
 combined.plot.race <- plot5 + plot6 + plot7 + plot8 + 
-  plot_layout(ncol = 2)
-combined.plot.race <- patchwork::patchworkGrob(combined.plot.race)
-gridExtra::grid.arrange(combined.plot.race, left = "Predictions", bottom = "Race")
+  plot_layout(ncol = 2, guides = "collect")
 
-ggsave("Boxplot.Gender", plot = combined.plot.gender, device = "PNG", path = "../../plots", width = 160, height = 90, units = "mm")
+combined.plot.race <- patchwork::patchworkGrob(combined.plot.race)
+gridExtra::grid.arrange(combined.plot.race, 
+                        bottom = textGrob(expression(widehat(ZFYA)),
+                                          gp = gpar(fontsize = 14, fontweight = "bold")))
 
 
