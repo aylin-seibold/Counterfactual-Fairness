@@ -7,7 +7,7 @@ It contains the replication of the illustration from the paper:\
 Matt J. Kusner, Joshua R. Loftus, Chris Russell, Ricardo Silva\
 [Counterfactual Fairness](https://arxiv.org/pdf/1703.06856.pdf)\
 Neural Information Processing Systems (NIPS), 2017.\
-Mainly the code was taken from the repository [counterfactual-fairness] (https://github.com/mkusner/counterfactual-fairness).
+Mainly the code was taken from the repository [counterfactual-fairness](https://github.com/mkusner/counterfactual-fairness).
 
 ## To Run
 - - -
