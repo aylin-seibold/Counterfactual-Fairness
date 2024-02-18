@@ -43,10 +43,10 @@ gender.plot.fun <- function(data) {
     theme(axis.title.x = element_blank(),
           axis.title.y = element_blank(),
           axis.text.y = element_blank(),
-          axis.text = element_text(size = 10),
-          legend.text = element_text(size = 10),
-          legend.title = element_text(size = 11, face = "bold"),
-          title = element_text(size = 12, face = "bold")) +
+          axis.text = element_text(size = 12),
+          legend.text = element_text(size = 12),
+          legend.title = element_text(size = 13, face = "bold"),
+          title = element_text(size = 14, face = "bold")) +
     scale_fill_manual(name = "Gender",
                       values = c( "1" = "#D55E00", "0" = "#0072B2"),
                       labels = c("1" = "female", "0" = "male"),
@@ -64,10 +64,10 @@ race.plot.fun <- function(data) {
     theme(axis.title.x = element_blank(),
           axis.title.y = element_blank(),
           axis.text.y = element_blank(),
-          axis.text = element_text(size = 10),
-          legend.text = element_text(size = 10),
-          legend.title = element_text(size = 11, face = "bold"),
-          title = element_text(size = 12, face = "bold")) + 
+          axis.text = element_text(size = 12),
+          legend.text = element_text(size = 12),
+          legend.title = element_text(size = 13, face = "bold"),
+          title = element_text(size = 14, face = "bold")) + 
     scale_fill_manual(name = "Race",
                       values = c("0100" = "#D55E00", "00asian0" = "#0072B2",
                                   "black000" = "#009E73", "0000" = "#999999", 
@@ -99,8 +99,8 @@ combined.plot.gender <- plot1 + plot2 + plot3 + plot4 +
 
 combined.plot.gender <- patchwork::patchworkGrob(combined.plot.gender)
 gridExtra::grid.arrange(combined.plot.gender,
-                        bottom = textGrob(expression(widehat(ZFYA)),
-                                          gp = gpar(fontsize = 12, fontweight = "bold")))
+                        bottom = textGrob(bquote(bold(widehat(ZFYA))),
+                                          gp = gpar(fontsize = 14)))
 
 
 combined.plot.race <- plot5 + plot6 + plot7 + plot8 + 
@@ -108,7 +108,7 @@ combined.plot.race <- plot5 + plot6 + plot7 + plot8 +
 
 combined.plot.race <- patchwork::patchworkGrob(combined.plot.race)
 gridExtra::grid.arrange(combined.plot.race, 
-                        bottom = textGrob(expression(widehat(ZFYA)),
-                                          gp = gpar(fontsize = 14, fontweight = "bold")))
+                        bottom = textGrob(bquote(bold(widehat(ZFYA))),
+                                          gp = gpar(fontsize = 14)))
 
 

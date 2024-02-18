@@ -22,8 +22,7 @@ law$male      <- as.numeric(law$sex == 2)
 sense_cols <- c("amerind", "asian", "black", "hisp", "mexican", "other", "puerto", "white", "male", "female")
 
 set.seed(0)
-# Training- und Testdatensatz erstellen
-trainIndex <- createDataPartition(law$first_pf, p = .8, # aus package caret
+trainIndex <- createDataPartition(law$first_pf, p = .8, 
                                   list = FALSE, 
                                   times = 1)
 lawTrain <- law[trainIndex,]
@@ -39,7 +38,7 @@ lawTest$LSAT <- round(lawTest$LSAT)
 
 # don't fit model transductively
 # ------------------------------
-# Trainingsdatensatz: U lernen
+
 law_stan_train <- list(N = n, K = length(sense_cols), a = data.matrix(lawTrain[,sense_cols]), 
                        ugpa = lawTrain[,c("UGPA")], lsat = lawTrain[,c("LSAT")], zfya = lawTrain[,c("ZFYA")])
 
