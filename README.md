@@ -1,4 +1,4 @@
-# Counterfacutal Fairness Replication
+# Counterfactual Fairness Replication
 - - - 
 ## Description
 - - - 
