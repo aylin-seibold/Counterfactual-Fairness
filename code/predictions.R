@@ -53,7 +53,6 @@ if(file.exists("law_school_l_stan_train.rds")) {
   saveRDS(la_law_train, file = "law_school_l_stan_train.rds")
 }
 U_TRAIN   <- colMeans(la_law_train$u)
-# Extract information
 
 ugpa0      <- mean(la_law_train$ugpa0)
 eta_u_ugpa <- mean(la_law_train$eta_u_ugpa)
