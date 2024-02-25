@@ -11,8 +11,8 @@ Mainly the code was taken from the repository [counterfactual-fairness](https://
 
 ## To Run
 - - -
-Before the main file, Replication.rmd, can be run, Rstan must be installed.\
-Install: [RStan](http://mc-stan.org/users/interfaces/rstan)\
+Before the main file, Replication.Rmd, can be run, Rstan must be installed.\
+Install: [RStan](http://mc-stan.org/users/interfaces/rstan)
 
 The raw data can also be found here.\
 Download: [law data](https://www.dropbox.com/s/ca74he84aw6ed3z/law_data.csv?dl=0)
